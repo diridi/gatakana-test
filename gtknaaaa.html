@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body{
+            height: 100%;
+            margin: 0px;
+        }
+        .back{
+            width: 100%;
+            height: 100%;
+            background-position: center center;
+            background-image: url('./hahahoho.png');
+            background-repeat: no-repeat;
+            background-size: 80%;
+            position: absolute;
+            z-index: -1;
+        }
+        .flex{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .frame{
+            z-index: 2;
+            background-color: rgba(200, 200, 200, 0.8);
+            width: 900px;
+            height: 900px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 1s;
+        }
+        .menu button{
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            position: absolute;
+            transition: all 1s;
+            font-size: 40px;
+            border: 5px solid gray;
+            opacity: 0.6;
+        }
+        .menu button:hover{
+            opacity: 1;
+        }
+        .red{background-color: red}.green{background-color: green}.black{background-color: black}
+        .bonobono{
+            width: 50px;
+            height: 50px;
+            background-position: center center;
+            background-image: url('./hahahoho.png');
+            background-repeat: no-repeat;
+            background-size: 80%;
+            position: absolute;
+        }
+        .start{
+            z-index: 2;
+            width: 250px;
+            height: 250px;
+            background-color: aqua;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 250px;
+            user-select:none;
+            font-size: 60px;
+            transform: rotate()
+        }
+        .hide{
+            display: none;
+        }
+        .problem h1{
+            font-size: 150px;
+            margin: 30px;
+        }
+        .problem input{
+            width: 20%;
+            height: 20%;
+            text-align: center;
+            font-size: 50px;
+            border-radius: 50%;
+        }
+        .reframe{
+            border-radius: 0px;
+            width: 90%;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        .reframe > div{
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 80%;
+        }
+        .reframe h1{
+            height: 10%;
+            width: 100%;
+            text-align: center;
+            margin: 0px;
+        }
+        .inresult{
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            height: 94%;
+            width: 44%;
+            margin: 3%;
+            background-color: rgba(200, 200, 200, 0.7);
+            text-align: center;
+        }
+    </style>
+    <title>가타카나 테스트</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="back"></div>
+    <div class="flex">
+        <div class="menu frame">
+            <button class="lv1">쉬움</button>            
+            <button class="lv2">어려움</button>
+            <button class="lv3">매우 어려움</button>
+            <div class="bonobono"></div>
+            <div class="start">시작</div>
+        </div>
+        <div class="problem frame hide">
+            <h1>시작합니다</h1>
+            <input type="text">
+        </div>
+        <div class="result frame reframe hide">
+            <h1>결과</h1>
+            <div>
+                <div class="pass inresult">
+                    asdasd
+                </div>
+                <div class="error inresult">
+                    asd
+                </div>
+            </div>
+            <button class="re">다시하기</button>
+        </div>
+    </div>
+ 
+    <script>
+            $(document).ready(function(){
+                var condition = 0;
+                var bono = 100;
+                var hcount =3;
+                var sample = ['ア','イ','ウ','エ','オ'];
+                var gtkn = sample.slice();
+                var score = 0;
+                var stop=-1;
+                var pass = ['맞춘문제'];
+                var error = ['틀린문제'];
+                var rattime = 0;
+                console.log(gtkn);
+                $('.start').click(function(){
+                    if(condition == 0){
+                        $('.lv1').css('transform','translateX(-110%)').toggleClass('green');
+                        $('.lv2').css('transform','translatey(-110%)').toggleClass('red');
+                        $('.lv3').css('transform','translateX(110%)').toggleClass('black').css('color','white');
+                        $('.bonobono').css('transform','translateY('+bono+'px) rotate('+bono+'deg)'); bono=bono+10;
+                        $(this).html('X');
+                        condition = 1;
+
+                    }
+                    else{
+                        $('.lv1').css('transform','').toggleClass('green');
+                        $('.lv2').css('transform','').toggleClass('red');
+                        $('.lv3').css('transform','').toggleClass('black');
+                        $(this).html('시작');
+                        $('.bonobono').css('transform','translateY('+bono+'px) rotate('+bono+'deg)'); bono=bono+10;
+                        condition = 0;    
+                    }
+                })
+                $('.problem input').keydown(function(e){
+                    var v =$('.problem input').val();
+                    if(e.keyCode == 13){
+                        if(stop == 0){
+                            answer($('.problem input').val());
+                            console.log($('.problem input').val());
+                        }
+                        $('.problem input').val('');
+                    }
+                })
+                $('.re').click(function(){
+                    gtkn = sample.slice();
+                    score = 0;
+                    stop = -1;
+                    pass = ['맞춘문제'];
+                    error = ['틀린문제'];
+                    hcount =3;
+                    console.log(gtkn);
+                    hide('result','menu');
+                })
+                $('.lv1').click(function(){
+                    rattime =4000;
+                    hide('menu','problem');
+                    setTimeout(() => {
+                        tests();
+                    }, 1000);
+                })
+                $('.lv2').click(function(){
+                    rattime =2000;
+                    hide('menu','problem');
+                    setTimeout(() => {
+                        tests();
+                    }, 1000);
+                })
+                $('.lv3').click(function(){
+                    rattime =1000;
+                    hide('menu','problem');
+                    setTimeout(() => {
+                        tests();
+                    }, 1000);
+                })
+
+                function hide(down, up){
+                    $("."+down).css('opacity','0');
+                    $("."+up).css('opacity','1');
+                    setTimeout(() => {
+                        $("."+down).toggleClass('hide');
+                        $("."+up).toggleClass('hide');
+                    }, 1000);
+                }
+                        
+                function tests(){
+                    $('.problem input').focus();
+                    $('.problem h1').html(hcount--);
+                    setTimeout(() => {
+                        if(hcount>0){
+                            tests();
+                        }
+                        else{
+                            test();
+                        }
+                    }, 1000);
+                }
+                function test() {
+                    if(stop == 0){
+                        error.push($('.problem h1').html());
+                        console.log(error);
+                    }
+                    stop = 0;
+                    $('.problem h1').css('color','black');
+                    var rannum = randc(gtkn.length);
+                    $('.problem h1').html(gtkn[rannum]);
+                    var passpro = "";
+                    var errorpro = "";
+                    if(gtkn.length == 0){
+                        for(var i=0; i<pass.length;i++){
+                            passpro = passpro + "<p>"+pass[i]+"</p>"
+                        }
+                        $('.pass').html(passpro);
+
+                        for(var i=0; i<error.length;i++){
+                            errorpro = errorpro + "<p>"+error[i]+"</p>"
+                        }
+                        $('.error').html(errorpro);
+
+                        hide('problem','result');
+                    }
+                    else{
+                        setTimeout(() => {
+                            
+                            test();
+                        }, rattime);
+                    }
+                    gtkn.splice(rannum,1);
+                }
+                function randc(max) {
+                    return Math.floor(Math.random()*max);
+                }
+
+
+                function answer(dap) {
+                    var h1 = $('.problem h1').html();
+                    if( h1 == 'ア' &&  dap == '아'){
+                        ok(h1, dap);
+                    }
+                    else if( h1 == 'イ' &&  dap == '이'){
+                        ok(h1, dap);
+                    }
+                    else if( h1 == 'ウ' &&  dap == '우'){
+                        ok(h1, dap);
+                    }
+                    else if( h1 == 'エ' &&  dap == '에'){
+                        ok(h1, dap);
+                    }
+                    else if( h1 == 'オ' &&  dap == '오'){
+                        ok(h1, dap);
+                    }
+                    else{
+                        $('.problem h1').css('color','red');
+                    }
+                    console.log(score + h1 + dap);
+                }
+                function ok(gata , hangul) {
+                    score++;
+                    stop=1;
+                    $('.problem h1').css('color','green');
+                    pass.push(gata);
+                    console.log(pass);
+                }
+            });
+            </script>
+</body>
+</html>
