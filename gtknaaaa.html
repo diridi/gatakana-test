@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         html, body{
             height: 100%;
             margin: 0px;
+            overflow: hidden;
         }
         .back{
             width: 100%;
             height: 100%;
+            top: 0%;
             background-position: center center;
-            background-image: url('./hahahoho.png');
+            background-image: url('./bono.png');
             background-repeat: no-repeat;
             background-size: 80%;
             position: absolute;
@@ -44,39 +47,54 @@
             transition: all 1s;
             font-size: 40px;
             border: 5px solid gray;
-            opacity: 0.6;
         }
         .menu button:hover{
-            opacity: 1;
+            opacity: 0.7;
+            box-shadow: 20px 20px black;
         }
         .red{background-color: red}.green{background-color: green}.black{background-color: black}
         .bonobono{
+            display: block;
+            position: relative;
             width: 50px;
             height: 50px;
             background-position: center center;
-            background-image: url('./hahahoho.png');
+            background-image: url('./bono.png');
             background-repeat: no-repeat;
             background-size: 80%;
             position: absolute;
+            transition: all 1s;
+        }
+        .bonobono div{
+            display: none;
+        }
+        .bonobono:hover div{
+            left: 100%;
+            width: 200px;
+            position: absolute;
+            display: block;
         }
         .start{
             z-index: 2;
             width: 250px;
             height: 250px;
-            background-color: aqua;
+            background-color: skyblue;
+            border: 5px solid gray;
             border-radius: 50%;
             text-align: center;
             line-height: 250px;
             user-select:none;
             font-size: 60px;
-            transform: rotate()
+            transition: all 1s;
+        }
+        .start:hover{
+            transform: scale(1.1) rotate(10deg);
         }
         .hide{
             display: none;
         }
         .problem h1{
             font-size: 150px;
-            margin: 30px;
         }
         .problem input{
             width: 20%;
@@ -84,6 +102,8 @@
             text-align: center;
             font-size: 50px;
             border-radius: 50%;
+            border: 10px solid gray;
+            outline: none;
         }
         .reframe{
             border-radius: 0px;
@@ -94,6 +114,9 @@
         .reframe > div{
             display: flex;
             flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 3%;
             width: 100%;
             height: 80%;
         }
@@ -104,14 +127,61 @@
             margin: 0px;
         }
         .inresult{
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            height: 94%;
+            overflow-y: scroll;
             width: 44%;
-            margin: 3%;
+            height: 90%;
+            margin: 2%;
             background-color: rgba(200, 200, 200, 0.7);
             text-align: center;
+        }
+        .inresult p{
+            width: 100%;
+            height: 5%;
+        }
+        ::-webkit-scrollbar{
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track{
+            background: rgba(200, 200, 200, 0.5);
+        }
+        ::-webkit-scrollbar-thumb{
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+        }
+        @media ( max-width: 900px ){
+            .back{
+                width: 100%;
+                height: 100%;
+                background-size: 100%;
+                top: 0px;
+            }
+            .frame{
+                width: 90%;
+                height: 90%;
+                border-radius: 100px;
+
+            }
+            .menu button, .start{
+                width: 25%;
+                height: 100px;
+                border-radius: 20px;
+                font-size: 20px;
+                margin: 0px;
+            }
+            .start{
+                width: 30%;
+                line-height: 100px;
+            }
+            .problem h1{
+                font-size: 50px;
+            }
+            .problem input{
+                width: 100px;
+                height: 100px;
+            }
+            .inresult{
+                border-radius: 50px;
+            }
         }
     </style>
     <title>가타카나 테스트</title>
@@ -123,8 +193,8 @@
         <div class="menu frame">
             <button class="lv1">쉬움</button>            
             <button class="lv2">어려움</button>
-            <button class="lv3">매우 어려움</button>
-            <div class="bonobono"></div>
+            <button class="lv3">매우<br>어려움</button>
+            <div class="bonobono" ><div>강우에게<br> 빵을 사주거라!</div></div>
             <div class="start">시작</div>
         </div>
         <div class="problem frame hide">
@@ -135,29 +205,35 @@
             <h1>결과</h1>
             <div>
                 <div class="pass inresult">
-                    asdasd
+                    
                 </div>
                 <div class="error inresult">
-                    asd
+                    
                 </div>
             </div>
             <button class="re">다시하기</button>
         </div>
     </div>
- 
     <script>
+        var rattime = 0;
+        var sp = 0;
+        function spin(){
+            sp= sp+360;
+            $('.back').css('transform','rotate('+ sp +'deg)');
+        }
             $(document).ready(function(){
                 var condition = 0;
-                var bono = 100;
+                var bono = 50;
                 var hcount =3;
-                var sample = ['ア','イ','ウ','エ','オ'];
+                var sample =    ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン'];
+                var sampledap = ['아','이','우','에','오','카','키','쿠','케','코','사','시','스','세','소','타','치','츠','테','토','나','니','누','네','노','하','히','후','헤','호','마','미','무','메','모','야','유','요','라','리','루','레','로','와','오','응'];
+                var dapji = sampledap.slice();
                 var gtkn = sample.slice();
                 var score = 0;
                 var stop=-1;
                 var pass = ['맞춘문제'];
                 var error = ['틀린문제'];
-                var rattime = 0;
-                console.log(gtkn);
+                var rannum;
                 $('.start').click(function(){
                     if(condition == 0){
                         $('.lv1').css('transform','translateX(-110%)').toggleClass('green');
@@ -182,23 +258,24 @@
                     if(e.keyCode == 13){
                         if(stop == 0){
                             answer($('.problem input').val());
-                            console.log($('.problem input').val());
                         }
                         $('.problem input').val('');
                     }
                 })
                 $('.re').click(function(){
                     gtkn = sample.slice();
+                    dapji = sampledap.slice();
                     score = 0;
                     stop = -1;
                     pass = ['맞춘문제'];
                     error = ['틀린문제'];
-                    hcount =3;
-                    console.log(gtkn);
+                    hcount = 3;
+                    sp =0 ;
                     hide('result','menu');
                 })
                 $('.lv1').click(function(){
-                    rattime =4000;
+                    rattime =3000;
+                    $('.back').css('transition','3s all');
                     hide('menu','problem');
                     setTimeout(() => {
                         tests();
@@ -206,6 +283,7 @@
                 })
                 $('.lv2').click(function(){
                     rattime =2000;
+                    $('.back').css('transition','2s all');
                     hide('menu','problem');
                     setTimeout(() => {
                         tests();
@@ -213,6 +291,7 @@
                 })
                 $('.lv3').click(function(){
                     rattime =1000;
+                    $('.back').css('transition','1s all');
                     hide('menu','problem');
                     setTimeout(() => {
                         tests();
@@ -241,13 +320,10 @@
                     }, 1000);
                 }
                 function test() {
-                    if(stop == 0){
-                        error.push($('.problem h1').html());
-                        console.log(error);
-                    }
+                    spin();
                     stop = 0;
+                    rannum = randc(gtkn.length);
                     $('.problem h1').css('color','black');
-                    var rannum = randc(gtkn.length);
                     $('.problem h1').html(gtkn[rannum]);
                     var passpro = "";
                     var errorpro = "";
@@ -266,7 +342,10 @@
                     }
                     else{
                         setTimeout(() => {
-                            
+                            if(stop == 0){
+                                error.push($('.problem h1').html() + dapji[rannum]);
+                            }
+                            dapji.splice(rannum, 1);
                             test();
                         }, rattime);
                     }
@@ -276,35 +355,20 @@
                     return Math.floor(Math.random()*max);
                 }
 
-
                 function answer(dap) {
                     var h1 = $('.problem h1').html();
-                    if( h1 == 'ア' &&  dap == '아'){
-                        ok(h1, dap);
-                    }
-                    else if( h1 == 'イ' &&  dap == '이'){
-                        ok(h1, dap);
-                    }
-                    else if( h1 == 'ウ' &&  dap == '우'){
-                        ok(h1, dap);
-                    }
-                    else if( h1 == 'エ' &&  dap == '에'){
-                        ok(h1, dap);
-                    }
-                    else if( h1 == 'オ' &&  dap == '오'){
-                        ok(h1, dap);
+                    if( dap == dapji[rannum]){
+                        ok(h1,dap);
                     }
                     else{
                         $('.problem h1').css('color','red');
                     }
-                    console.log(score + h1 + dap);
                 }
                 function ok(gata , hangul) {
                     score++;
                     stop=1;
                     $('.problem h1').css('color','green');
-                    pass.push(gata);
-                    console.log(pass);
+                    pass.push(gata + dapji[rannum]);
                 }
             });
             </script>
